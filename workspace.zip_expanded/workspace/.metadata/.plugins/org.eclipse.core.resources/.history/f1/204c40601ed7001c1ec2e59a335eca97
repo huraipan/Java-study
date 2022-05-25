@@ -1,0 +1,13 @@
+package com.classex;
+improt java.import
+public class ClassExam01 {
+
+	public static void main(String[] args) {
+		
+		ClassExam ce = new ClassExam();
+		ce.setJumin();
+		ce.setName();
+
+	}
+
+}

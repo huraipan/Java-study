@@ -1,0 +1,23 @@
+package com.methodex;
+import java.io.*;
+public class MethodEx06 {
+	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	
+	
+	
+	getInt(String str){
+	
+		System.out.print(str+": ");
+	}
+	
+	
+	
+	
+	
+	public static void main(String[] args)throws IOException {
+		int kor= ();
+		System.out.println("당신의 국어점수는"+kor+"입니다.");
+
+	}
+
+}
