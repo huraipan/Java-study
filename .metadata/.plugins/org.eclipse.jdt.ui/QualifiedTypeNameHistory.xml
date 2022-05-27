@@ -3,4 +3,8 @@
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="com.inher.Book"/>
     <fullyQualifiedTypeName name="java.lang.Math"/>
+    <fullyQualifiedTypeName name="com.inner.OuterEx.InnerEx"/>
+    <fullyQualifiedTypeName name="com.inner.MemberInner.Inner"/>
+    <fullyQualifiedTypeName name="com.inner.StaticInner.Inner"/>
+    <fullyQualifiedTypeName name="com.inner.OuterEx01.InnerEx01"/>
 </qualifiedTypeNameHistroy>
