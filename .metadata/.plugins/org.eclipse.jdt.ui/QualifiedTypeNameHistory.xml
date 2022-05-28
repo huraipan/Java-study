@@ -7,4 +7,5 @@
     <fullyQualifiedTypeName name="com.inner.MemberInner.Inner"/>
     <fullyQualifiedTypeName name="com.inner.StaticInner.Inner"/>
     <fullyQualifiedTypeName name="com.inner.OuterEx01.InnerEx01"/>
+    <fullyQualifiedTypeName name="staticex.Student1"/>
 </qualifiedTypeNameHistroy>
