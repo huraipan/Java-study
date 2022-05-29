@@ -8,4 +8,8 @@
     <fullyQualifiedTypeName name="com.inner.StaticInner.Inner"/>
     <fullyQualifiedTypeName name="com.inner.OuterEx01.InnerEx01"/>
     <fullyQualifiedTypeName name="staticex.Student1"/>
+    <fullyQualifiedTypeName name="array.Student"/>
+    <fullyQualifiedTypeName name="java.lang.System"/>
+    <fullyQualifiedTypeName name="array.BookArrary2"/>
+    <fullyQualifiedTypeName name="javax.security.auth.Subject"/>
 </qualifiedTypeNameHistroy>
