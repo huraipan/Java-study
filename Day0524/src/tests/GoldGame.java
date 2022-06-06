@@ -81,7 +81,7 @@ class Game{
 			}
 			System.out.println("");
 		}
-		System.out.print("left(a), right(d), up(w), down(s), QUIT(o): ");
+		System.out.print("왼쪽(a), 오른쪽(d), 위(w), 아래(s), 그만(o): ");
 		c=sc.next().charAt(0);
 	}
 	
@@ -136,8 +136,8 @@ class Game{
 		}
 		System.out.println("!!!!!!!!!!!!!!");
 		System.out.println("Game ended");
-		if(getGold(user)) System.out.println("you got the GOLD!");
-		if(getGold(mnstr)) System.out.println("monster got the GOLD!");
+		if(getGold(user)) System.out.println("사용자 승리");
+		if(getGold(mnstr)) System.out.println("몬스터 승리");
 		if(attackMonster()) System.out.println("monster ATTACKED you!");
 	}
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="com.inher.Book"/>
     <fullyQualifiedTypeName name="com.inner.OuterEx.InnerEx"/>
     <fullyQualifiedTypeName name="com.inner.MemberInner.Inner"/>
@@ -33,4 +32,5 @@
     <fullyQualifiedTypeName name="java.lang.ArithmeticException"/>
     <fullyQualifiedTypeName name="com.study.Book"/>
     <fullyQualifiedTypeName name="com.study.Box"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
 </qualifiedTypeNameHistroy>
