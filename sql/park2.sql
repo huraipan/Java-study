@@ -405,10 +405,187 @@ select to_char(sysdate, 'yyyy/mon/dd hh24:mi:SS') from dual;
 select ename, sal from emp where deptno=10;
 select ename, sal, to_char(sal,'$999,999') from emp where deptno=10;
 
--- 오늘을 기준으로 
+-- 올해 며칠이 지났는지 날짜를 계산하여 출력하시오.
+select sysdate-'2022/01/01' from dual;-- <- 오류발생
+select trunc(sysdate-TO_DATE('2022/01/01', 'yyyy/mm/dd')) from dual;
+select sysdate-to_date('2022/01/01', 'yyyy/mm/dd') from dual;
 
-select months_between(sysdate, '2022/01/01') from dual;
-select to_date(sysdate) - to_date('2022/01/01') from dual;
+/*
+ 일반함수 (기타 함수)
+ 
+ NVL    : 첫번째 인자로 받은 값이 NULL과 같으면 두 번째 인자 값으로 변경
+ DECODE : 첫번째 인자로 받은 값을 조건에 맞춰 변경(if 조건문과 유사함)
+ CASE   : 조건에 맞는 문장을 수행함(switch문과 유사함)
+*/
+
+-- NVL: NULL값을 다른 값으로 변환하는 함수
+--      NULL을 0 또는 다른 값으로 변환하기 위해 사용하는 함수
+
+select ename, sal, nvl(comm,0) as comm, job from emp order by job;
+
+-- 연봉을 계산하기 위해서 급여에 12를 곱한 수 커미션을 더해보면 어떻게?
+
+select ename,
+sal*12+nvl(comm,0) as sal,
+nvl(comm,0) as comm, 
+job from emp order by sal desc;
+
+-- 유일하게 상관이 없는 사원이 있는 이 사람이 CEO
+-- mgr의 NULL값을 CEO로 변환하여 출려하시오.
+select ename,  nvl(to_char(mgr), 'CEO') as MGR from emp;
+select ename,  NVL(TO_CHAR(MGR, '9999'),'CEO') as MGR from emp;
+-- 숫자데이터를 문자열로 변환
+-- NULL 값을 변경한다.
+
+select deptno from emp;
+select distinct(deptno) from emp;
+select deptno, dname from dept;
+select * from emp;
+
+/*
+  조건에 맞는 문을 선택하기 위한 함수
+  SWITCH CASE문과 같이 여러가지 경우에 대해서 선택할 수 있는 함수
+  DECODE(표현식, 조건, 결과1,
+                조건2, 결과2,
+                조건3, 결과3,
+                기본결과 n)
+*/
+select empno,
+ename,
+decode(deptno, 10, 'ACCOUNTING', 20, 'RESEARCH', 30, 'SALES', 40, 'OPERATIONS') as deptname,
+deptno
+from emp
+order by deptname;
+/*
+  CASE: 조건에 따라 서로 다른 처리가 가능한 함수
+  
+        CASE 표현식 WHEN 조건1 THEN 결과1
+             표현식 WHEN 조건2 THEN 결과2
+             표현식 WHEN 조건3 THEN 결과3
+             ELSE 결과 n
+        END
+*/
 
 
+select empno,
+ename,
+case when deptno = 10 then 'ACCOUNTING'
+     when deptno = 20 then 'RESEARCH'
+     when deptno = 30 then 'SALES'
+     when deptno = 40 then 'OPERATIONS'
+END  deptname,
+deptno
+from emp
+order by deptname;
+
+select sal from emp;
+select * from emp order by sal desc;
+
+/*
+ 문) 직급에 따라 보너스를 지급하기 위해 직급이 'manager'인 사원은 15% 인상하고
+     직급이 'clerk'인 사원은 5% 인상하도록 처리하시오. (decode 함수 사용)
+*/
+
+
+
+select empno,
+ename,
+job,
+decode (job, 'MANAGER', trunc(SAL+(SAL*0.15)), 'CLERK', SAL+(SAL*0.5), sal) sal
+from emp
+order by sal desc;
+
+
+select empno,
+ename,
+job,
+case when job = 'MANAGER' then trunc(sal*1.15)
+     when job = 'CLERK'   then trunc(sal*1.5)
+     else sal
+     end sal
+     from emp
+     order by sal desc;
+
+select * from emp;
+select sum(sal) from emp;
+select trunc(avg(sal)) from emp;
+select max(sal), min(sal) from emp;
+select count(*),count(comm) from emp;
+select count(comm) from emp where deptno=30;
+select * from emp where deptno=10;
+select count(*) from emp where deptno=10;
+select count(distinct(job)) from emp;
+
+/*
+ GROUP BY절
+   특정 컬럼 값을 기중으로 테이블을 그룹별로 나누기 위해 사용함
+   형식: select 컬럼명, 그룹함수 from 테이블명 where 조건식
+   group by 컬럼명
+*/
+-- 사원들을 부서번호를 기준으로 3개
+select deptno, sum(sal), round(avg(sal)) avg, 
+max(sal), min(sal) 
+from emp 
+group by deptno;
+
+
+select job,
+count(*) cnt
+from emp
+where deptno in(10, 20, 30)
+group by job
+having count(*) > 3;
+
+
+select deptno, round(avg(sal)) 
+from emp group by deptno 
+having round(avg(sal))>2000;
+
+select deptno, max(sal), min(sal) 
+from emp group by deptno
+having max(sal) >2900;
+
+
+/*
+create table 테이블명(
+     컬럼명 데이터자료형,
+     컬럼명 데이터자료형,
+     컬럼명 데이터자료형,
+     컬럼명 데이터자료형
+);
+
+  char       : 고정길이 문자 데이터 최소 크기는 1, 최대 크기는 2000byte
+  varchar2   : 가변길이 문자 데이터 실제입력된 문자열을 길이만큼 저장함 최소크기는 1, 최대크기는 4000byte
+  number     : 숫자형 데이터 최대 40자리까지 저장할 수 있음, 소수점이나 부호는 길이에 포함시키지 않음
+  number(w)  : 지정한 자리까지 수치로 최대 38자리까지 가능함
+  number(w,d): w는 전체자리수, d는 소수점이하 자릿수이며 소수점은 자릿수에 포함되지 않음
+  date       : 날짜 데이터를 저장(기원전, 기원후) 
+  long       : 가변길이 문자형 데이터 타입, 최대길이: 2GByte
+  lob        : 2GB까지의 가변길이 바이너리 데이터를 저장시킴
+              (바이너리데이터: 이미지 파일, 실행파일 여러가지 문서파일)
+  rowid      : 데이터베이스에 저장되어 있지 않으며 데이터베이스 데이터도 아니다.
+  
+*/
+
+
+SELECT * FROM emp;
+
+select rowid from emp where rownum <=5;
+
+/*
+ 테이블과 컬럼명을 부여하기 위한 규칙
+  - 반드시 문자로 시작해야한다.
+  - 1 ~ 30자까지 가능하다.
+  - A ~ z까지의 대소문자, 0 ~ 9까지의 숫자, 특수문자(_,$,#)만 가능함
+  - 공백을 허용 하지 않음
+  - 예약이나 테이블명 중복 불가
+*/
+
+create table emp01(
+empno number(4),
+ename varchar2(20),
+sal number(7,2)
+);
+
+desc emp01;
 
