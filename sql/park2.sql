@@ -47,7 +47,7 @@ select * from emp;
 /*
 날짜 데이터 조회
  - 날짜 데이터는 반드시 싱글쿼터 안에 표시하고, 년/월/일 형식으로 기술한다.
- 문) 입사일이 85년 이후인 사람을 정보(이름, 입사일)를 출력하시오
+ 문) 입사일이 85년 이후인 사람의 정보(이름, 입사일)를 출력하시오
 */
 select ename, hiredate from emp where hiredate>='85/01/01';
 
@@ -107,7 +107,7 @@ select comm from emp where comm is null;
 NULL을 위한 연산자
  오라클에서 컬럼에 null값이 저장되는 것을 허용함
  null은 미확정, 알 수 없는 값을 의미함
-   0도 빈공간도 아닌 어떤 값이 존재하시는 하지만 어떤 값인지 알아낼 수는 없다.
+   0도 빈공간도 아닌 어떤 값이 존재하기는 하지만 어떤 값인지 알아낼 수는 없다.
    
  null은 연산, 할당, 비교가 불가능하다.
  
@@ -132,7 +132,7 @@ select * from emp;
 /*
 정렬을 위한 order by 절
 
- order by 절은 로우(행)를 정렬하는데 사용함
+ order by 절은 로우(행)를 정렬하는 데 사용함
   쿼리문 맨 뒤에 기술하며 정렬의 기준이 되는 컬럼 이름 또는 select절에서 명시된 별칭을 사용
   
    기준            오름차순(asc)               내림차순(desc)
@@ -211,7 +211,7 @@ select 'DataBase' , UPPER('DataBase') from dual;
 select EMPNO, ENAME, JOB from emp where LOWER(job)='manager';
 
 
--- 첫 글짜만 대문자로 변환
+-- 첫 글자만 대문자로 변환
 select INITCAP('DATA BASE PROGRAMMING') from dual;
 
 -- 사원테이블의 10번 부서 소속의 사원의 이름을 첫 글자만 대문자로 변환하시오.
@@ -226,7 +226,7 @@ select empno, ename, sal, comm from emp where lower(ename)='smith';
 
 -- CONCAT: 두 문자를 연결
 
-select concat('Kim','HaeYoung') from dual;
+select concat('Kim',' HaeYoung') from dual;
 
 -- LENGTH: 문자의 길이를 반환
 -- LENGTHB: 문자의 길이를 반환
@@ -301,6 +301,7 @@ round(47.51),-- 0번째 자리에서 반올림 소수이하 1자리 반올림 함
 round(834.12,-1),-- 두번째 인자값이 음수이면 일의 자리에서 반올림함
 round(653.53,-2)-- 십의 자리에서 반올림함
 from dual;
+
 
 select power(3,2) from dual;
 select mod(34,2) from dual;
@@ -431,7 +432,7 @@ nvl(comm,0) as comm,
 job from emp order by sal desc;
 
 -- 유일하게 상관이 없는 사원이 있는 이 사람이 CEO
--- mgr의 NULL값을 CEO로 변환하여 출려하시오.
+-- mgr의 NULL값을 CEO로 변환하여 출력하시오.
 select ename,  nvl(to_char(mgr), 'CEO') as MGR from emp;
 select ename,  NVL(TO_CHAR(MGR, '9999'),'CEO') as MGR from emp;
 -- 숫자데이터를 문자열로 변환
@@ -581,7 +582,7 @@ select rowid from emp where rownum <=5;
   - 예약이나 테이블명 중복 불가
 */
 
-create table emp01(
+create table emp02(
 empno number(4),
 ename varchar2(20),
 sal number(7,2)
@@ -589,3 +590,547 @@ sal number(7,2)
 
 desc emp01;
 
+select empno from emp01;
+insert into emp01 values(1111, 'haeyoung', 5000, 'CEO');
+
+
+select * from emp02;
+create table emp02 as
+select * from emp;
+desc emp02;
+
+select * from dept;
+
+/*
+
+ alter table로 테이블 구조 변경
+   - 테이블에서 컬럼의 추가, 삭제, 변경(자료형, 길이)할 때 사용한다.
+   - ADD COLUMN절을 사용하여 새로운 컬럼 추가
+   - MODIFY COLUMN절을 사용하여 기존 컬럼을 수정한다.
+   - DROP COLUMN절을 사용하여 기존 컬럼을 삭제한다.
+   
+*/
+desc emp01;
+
+-- alter table 테이블명 add(컬럼명 데이터타입);
+
+alter table emp01 add(job varchar2(9));
+select * from emp01;
+
+DELETE FROM emp01 WHERE empno=1111;
+
+/*
+ alter table 테이블명 modify(컬럼명, 데이터자료형)
+    - 해당 컬럼에 자료가 없는 경우
+       컬럼의 데이터 타입을 변경할 수 있다.
+       컬럼의 크기를 변경할 수 있다.
+    - 컬럼의 데이터 타입을 변경할 수 없다.
+      크기를 늘릴수는 있지만 현재 가지고 있는 데이터 크기보다 작은 크기로 변경할 수 없다.
+*/
+
+insert into emp01(empno, ename, sal, job) values(1112, 'jinwoo', 3000, 'MANAGER');
+select * from emp01;
+-- alter table 테이블명 modify(컬럼명 데이터타입);
+
+-- emp01테이블에서 job 데이터 타입의 크기를 30으로 변경하시오.
+alter table emp01 modify(job varchar2(30));
+
+-- alter table 테이블명 drop column 컬럼명;
+alter table emp01 drop column job;
+
+/*
+ DROP table
+    drop table 명령문은 기존 테이블을 삭제한다.
+    테이블을 삭제하면 테이블에 저장되어 있는 데이터도 함께 삭제된다.
+    제거된 데이터는 복구할 수 없다.
+*/
+
+-- drop table 테이블명
+drop table emp01;
+select * from tab;
+
+desc recyclebin;
+select * from recyclebin;
+
+purge recyclebin;
+FLASHBACK table "BIN$jPlgsF+WSDqHWRCA1Aq10g=$0" to BEFORE drop;
+
+-- 테이블 이름 변경 rename문
+-- 형식: rename 기존 테이블명 to 새로운 테이블명
+rename emp01 to emp04;
+
+select * from emp01;
+
+delete from emp03;
+rollback;
+
+
+create table dept01(
+ deptno number(2),
+ dname varchar2(14),
+ loc varchar2(13)
+ );
+-- 부서번호 10, 부서명 ACCOUNTING, 지역 NEW YORK를 추가하시오.
+INSERT INTO DEPT01(deptno, dname, loc) values(10, 'ACCOUNTING', 'NEW YORK');
+INSERT INTO DEPT01(deptno, dname, loc) values(20, 'RESEARCH', 'DALLAS');
+INSERT INTO DEPT01(deptno, dname) values(30, 'SALES');
+
+select * from dept01;
+
+desc dept;
+
+INSERT INTO DEPT(deptno) values(null);
+
+create table emp01(
+deptno number(2) not null,
+dname varchar2(14),
+loc varchar2(13)
+);
+desc dept02;
+select * from dept01;
+insert into dept02 values(10, null, null);
+insert into dept02 values(20, '', '');
+SELECT * from dept02;
+select * from emp01;
+
+drop table dept01;
+
+
+create table emp01 as select * from emp;
+
+/*
+ 기존행을 수정하는 UPDATE SET (U)
+ 형식
+   UPDATE 테이블명 SET 컬럼명1=값1, 컬럼명2=값2 where 조건식
+   
+   어떤 행의 데이터를 수정하는지 where절을 이용하여 조건을 지정
+   where 절을 사용하지 않으면 테이블에 있는 모든 행이 수정됨
+   
+*/
+-- 모든 사원의 부서번호를 30번으로 수정
+update emp01 set deptno=30;
+rollback;
+select * from emp01;
+
+-- 모든 사원의 급여를 10% 인상
+update emp01 set sal= sal*1.1;
+
+-- 모든 사원의 입사일을 오늘로 수정
+update emp01 set hiredate=sysdate;
+
+rollback;
+
+-- 1987년에 입사한 사원의 입사일을 오늘로 수정
+update emp01 set hiredate=sysdate where substr(hiredate,1,2)='87';
+rollback;
+
+-- SCOTT 사원의 부서번호를 10, 직급은 MANAGER로 수정하시오.
+
+select deptno, job from emp01 where ename='SCOTT';
+
+update emp01 set deptno=10, job='MANAGER' where ename='SCOTT';
+
+/*
+ DELETE
+  테이블에 특정 행을 삭제할 때
+  
+  형식
+    DELETE FROM 테이블명 WHERE 조건
+*/
+select * from dept01;
+create table dept01 (
+deptno number(2),
+dname varchar(13)
+);
+delete from dept01 where deptno=30;
+
+/*
+  savepoint
+   - 현재 트랜잭션을 작게 분할 할 수 있다.
+     저장된 savepoint는 rollback to savepoint문을 사용하여 표시한 곳 까지 rollback 할 수 있음
+     
+  형식
+     특정 위치를 지정하는 형식
+     savepoint 테이블명
+     
+     지정해 놓은 특정위치로 되돌아가는 형식
+     rollback to label_name;
+*/
+
+select * from emp01;
+drop table dept01;
+create table dept01 as select * from dept;
+select * from dept01;
+
+-- 부서번호 40번 삭제
+delete from dept01 where deptno=40;
+commit;
+
+delete from dept01 where deptno=30;
+savepoint c1;
+delete from dept01 where deptno=20;
+savepoint c2;
+delete from dept01 where deptno=10;
+select * from dept01;
+
+rollback to c2;
+
+rollback;
+
+select * from user_cons_columns where table_name='EMP';
+select * from user_cons_columns where table_name='DEPT';
+
+/*
+
+무결성 제약조건
+  - 데이터를 추가, 수정, 삭제하는 과정에서 무결성을 유지할 수 있도록 제약을 주는 것을 의미함
+  - 무결성: 데이터베이스 내에 데이터의 확장성을 유지하는 것을 의미하고, 제약 조건이란
+    제약조건: 바람직하지 않은 데이터가 저장되는 것을 방지하기 위함
+    
+    무결성 제약 조건
+    NOT NULL    : NULL을 허용하지 않는다.
+    UNIQUE      : 중복된 값을 허용하지 않는다. 항상 유일한 값을 갖도록 함
+    PRIMARY KEY : NOT NULL + UNIQUE 조건을 결합한 형태를 의미함
+    FOREIGN KEY : 참조되는 테이블의 컬럼값이 존재하면 허용됨
+    CHECK       : 저장 가능한 데이터 값의 범위나 조건을 지정하여 설정한 값만을 허용함
+*/
+
+select * from emp01;
+create table emp01(
+empno number(4),
+ename varchar(10),
+job varchar2(9),
+depno number(4));
+
+insert into emp01 values(null,null,'salesman',30);
+select * from emp01;
+-- NOT NULL 제약조건은 해당 컬럼에 null값을 추가하거나 null값으로 변경하는 것을 막음
+-- 제약조건은 컬럼명과 자료형을 기술한 후에 이어서 not null을 기술하면 됨
+
+create table emp02(
+empno number(4) not null,
+ename varchar(10) not null,
+job varchar2(9),
+depno number(4));
+insert into emp02 values(null,null,'salesman',30);
+
+-- UNIQUE: 중복된 값을 허용하지 않는다. 항상 유일한 값을 갖도록 함
+
+create table emp03(
+empno number(4) UNIQUE,
+ename varchar(10) not null,
+job varchar2(9),
+depno number(4));
+insert into emp03 values(7499,'ALLEN','salesman',30);
+insert into emp03 values(NULL,'HAEYOUNG','manager',20);
+insert into emp03 values(null,'ALLEN','salesman',10);
+
+/*
+ unique: null값을 예외로 간주함, 만약 null값 마저도 입력되지 않게 제한 하려면
+         테이블 생성시 empno number(4) unique not null처럼 두 가지 제약조건을
+         기술해야함
+*/
+desc user_tables;
+
+show user;
+
+/*
+제약 조건 확인 하기
+  제약조건의 에러 메시지에 대한 정확한 원인을 알기 위해 오라클에서 제공해 주는 user_constraints 데이터 딕셔너리
+  
+    user_constraint 데이터 딕셔너리
+      - 제약조건의 정보를 위해서 많은 컬럼으로 구성되어 있지만
+        제약조건명, 제약 조건유형, 제약 조건이 속한 테이블만을 알아봄
+*/
+
+select constraint_name, constraint_type, table_name from user_constraints where table_name='EMP03';
+
+/*
+constraint_type은 P, R, U, C 4가지가 있음
+
+         P: PRIMARY KEY
+         R: FOREIGN KEY
+         U: UNIQUE
+         C: CHECK NOT NULL
+*/
+
+
+/*
+ PRIMARY KEY 제약 조건
+  - 식별 기능을 갖는 컬럼은 유일하면서도 NULL값을 허용하지 않는다.
+    즉, unique와 not null 제약 조건 모두를 갖는 것이 기본키(PRIMARY KEY) 제약조건임
+*/
+
+
+create table emp04(
+empno number(4) PRIMARY KEY,
+ename varchar(10) not null,
+job varchar2(9),
+depno number(4));
+
+insert into emp04 values(7499, 'ALLEN', 'SALESMAN', 30);
+insert into emp04 values(7499, 'HAEYOUNG', 'MANAGER', 20);
+
+select constraint_name, constraint_type, table_name from user_constraints where table_name='EMP04';
+
+select * from emp04;
+insert into emp04 values(7566, 'HAEYOUNG', 'MANAGER', 50);
+delete from emp04 where depno=20;
+
+
+create table emp05(
+empno number(4) PRIMARY KEY,
+ename varchar(10) not null,
+job varchar2(9),
+deptno number(4) REFERENCES DEPT01(deptno)
+);
+
+select * from dept;
+
+drop table EMP05;
+
+create table dept01 (
+deptno number(2) primary key,
+dname varchar2(14),
+loc varchar2(13)
+);
+select * from emp05;
+select * from dept01;
+insert into dept01 values(40, 'OPERATIONS', 'BOSTON');
+
+select constraint_name, constraint_type, table_name from user_constraints where table_name='EMP05';
+insert into emp05 values(7499, 'HAEYOUNG', 'SALESMAN', 30);
+insert into emp05 values(7566, 'JINWOO', 'MANAGER', 50);
+drop table dept01;
+
+-- SELECT * FROM USER_CONSTRAINTS WHERE TABLE_NAME = 'EMP05';
+
+/*
+ check 제약 조건
+   - 입력되는 값을 체크하여 설정된 값 이외의 값이 들어오면 오류 메시지와 함께 명령이 수행되지 못하게 하는 것을 의미함
+*/
+
+/*
+ emp06 사원테이블에 GENDER(성별) 컬럼을 추가하되 
+ GENDER 컬럼에는 'M' or 'F'의 두 값만 저장할 수 있는 check 제약 조건 설정
+*/
+
+create table emp06 (
+empno number(4) primary key,
+ename varchar2(10) not null,
+gender varchar2(1) check(gender in('M', 'F'))
+);
+
+insert into emp06 values(7566, 'HAEYOUNG', 'F');
+select constraint_name, constraint_type, table_name, search_condition from user_constraints where table_name='EMP06';
+
+/*
+제약 조건명 지정하기
+ - 사용자가 의미있게 제약 조건명을 명시하여 제약 조건명만으로 어떤 제약조건을 위배 했는지 알 수 있게 하는 방법
+    지정방법: column_name data_type CONSTRAINT constraint_name constraint_type
+    
+   제약 조건명 명명 규칙
+     테이블명_컬럼명_제약조건 유형
+     
+   기본키 제약 조건명을 EMP06_EMPNO_PK로 지정함
+       EMP05_EMPNO_PK
+*/
+
+drop table emp05;
+
+create table emp05(
+empno number(4) constraint emo05_empno_pk primary key,
+ename varchar2(10) constraint emp05_ename_nn not null,
+job varchar2(9) constraint emp05_job_uk unique,
+deptno number(4) constraint emp05_deptno_fk references dept01(deptno)
+);
+select constraint_name, constraint_type, table_name, search_condition from user_constraints where table_name='EMP05';
+
+insert into emp05 values(7499, 'HAEYOUNG', 'SALESMAN', 30);
+insert into emp05 values(7499, NULL, 'SALESMAN', 50);
+
+/*
+테이블 레벨 방식으로 제약조건 지정하기
+
+  복합키로 기본키를 지정할 경우
+   - 복합키 형태로 제약조건을 지정할 경우에는 컬럼 레벨 형식으로는 
+     불가능하고 반드시 테이블 레벨 방식을 사용함
+ 
+ 
+  ALTER TABLE로 제약 조건을 추가할 경우
+   - 테이블의 정의가 완료되어서 미이 테이블의 구조가 결정된 후에 나중에 테이블에
+     제약 조건을 추가하고자 할 때에는 테이블 레벨 방식으로 제약조건을 지정함
+     
+     형식
+      create table 테이블명(
+      컬럼명1  데이터 타입1,
+      컬럼명2  데이터 타입2,
+      ...
+      
+      CONSTRAINT constraint_name  constraint_type(column_name)
+      );
+*/
+
+-- 테이블 레벨로 제약조건을 지정하는 방식
+select * from tab;
+drop table emp04;
+
+create table emp04(
+empno number(4),
+ename varchar2(10) not null,
+job varchar2(9),
+deptno number(4),
+primary key(empno),
+unique(job),
+foreign key(deptno) references dept01(deptno)
+);
+
+drop table emp03;
+-- 테이블 레벨에서 컬럼의 제약 조건명을 명시적으로 지정해 줄 경우 constraint 키워드를 사용함
+create table emp03(
+empno number(4),
+ename varchar2(10) constraint emp03_ename_nn not null,
+job varchar2(9),
+deptno number(4),
+constraint emp03_empno_pk primary key(empno),
+constraint emp03_job_uk unique(job),
+constraint emp03_dpetno_fk foreign key(deptno) references dept01(deptno)
+);
+
+select constraint_name, constraint_type, table_name, search_condition from user_constraints where table_name='EMP03';
+
+
+------------------------- end 제약조건 지정방식 ---------------------------
+
+---------------------- 제약 조건 변경 ----------------------------
+/*
+ 1. 제약 조건 추가하기
+     테이블 생성이 끝난 후에 제약 조건을 추가하기 위해 alter table로 추가함
+     형식
+       alter table 테이블명
+       add constraint constraint_name  constraint_type(column_name);
+*/
+
+
+-- 2. 제약 조건 제거하기
+drop table emp01;
+create table emp01(
+empno number(4),
+ename varchar2(10),
+job varchar2(9),
+deptno number(4)
+);
+select constraint_name, constraint_type, table_name, search_condition from user_constraints where table_name='EMP05';
+
+-- emp01 테이블의 empno 컬럼에 기본키 설정하고, deptno 컬럼에 외래키 설정
+alter table emp01
+add primary key(empno);
+
+alter table emp01
+add constraint emp01_deptno_fk foreign key(deptno) references dept01(deptno);
+
+/*
+제약 조건 제거하기
+ - 제약 조건을 제거하기 위해서는 drop constraint 다음에 제거하고자하는 제약 조건명을 명시함
+ alter table 테이블명
+ drop constraint 제약 조건명;
+ 
+*/
+select * from emp05;
+insert into emp05 values(7498,'HAEYOUNG', 'MASTER', 50);
+
+alter table emp05
+drop constraint emp05_deptno_fk;
+
+
+/*
+ 제약조건의 비활성화 cascade;
+   - 제약조건의 비활성화란 설정된 제약 조건을 잠시 사용하지 않게 하는 것임
+   
+   disable: 제약 조건의 일시 비활성화
+   enable: 비활성화된 제약조건의 해제하여 다시 활성화함
+*/
+
+select constraint_name, constraint_type, table_name, search_condition from user_constraints where table_name='EMP01';
+select * from DEPT01;
+
+
+drop table emp01;
+create table emp01(
+empno number(4) constraint emp01_empno_pk primary key,
+ename varchar2(10) constraint emp01_ename_nn not null,
+job varchar2(9),
+deptno number(4) constraint emp01_deptno_fk references dept01(deptno)
+);
+
+insert into emp01 values(7499, 'HAEYOUNG', 'SALESMAN', 10);
+insert into emp01 values(7369, 'JINWOO', 'CLERK', 20);
+
+delete from dept01 where deptno=10;
+
+/*
+  제약조건 활성화와 비활성화
+    
+    - 제약조건이 설정되면 항상 그 규칙에 따라 데이터 무결성이 보장됨
+      오라클에서는 제약조건을 비활성화시킴으로써 제약조건을 삭제하지 않고도 사용을 잠시
+      보류할 수 있으며 비활성화된 제약조건은 원하는 작업을 한 후 다시 활성화 상태로
+      만들어 주어야함.
+  
+   활성화 방법
+     alter table 테이블명
+     enable constraint 제약조건명;
+  
+   비활성화 방법
+     alter table 테이블명
+     disable constraint 제약조건명;
+*/
+-- 비활성화
+alter table EMP01
+ disable constraint EMP01_DEPTNO_FK;
+-- 상태확인
+select constraint_name, constraint_type, table_name, search_condition, STATUS from user_constraints where table_name='EMP01';
+
+DELETE FROM DEPT01 WHERE DEPTNO=10;
+ROLLBACK;
+-- 활성화
+-- 자식테이블
+alter table EMP01
+ enable constraint EMP01_DEPTNO_FK;
+ 
+/*
+cascade
+  - cascade 옵션은 부모테이블(dept01)과 자식테이블(emp01)간의 참조 설정이 되어 있을 때
+    부모 테이블의 제약 조건을 비활성화 하면 이를 참조하고 있는 자식테이블의 제약 조건까지
+    같이 비활성화 시켜주는 옵션이다.
+*/
+alter table dept01
+disable primary key cascade;
+
+select constraint_name, constraint_type, table_name, search_condition, STATUS 
+from user_constraints where table_name IN ('DEPT01', 'EMP01');
+
+alter table dept01
+drop primary key cascade;
+
+/*
+ cascade 옵션을 지정하여 기본키 제약 조건을 삭제하면 이를 참조하는 외래키 제약 조건도 연속적으로 삭제한다.
+*/
+
+ 
+ select * from emp e, dept d where e.deptno=d.deptno;
+ 
+ 
+ /*
+  조인 : 한개 이상의 테이블에서 데이터를 조회하기 위해 사용되는것
+  
+  종류
+    Equi join : 동일한 컬럼을 기준으로 조인
+    Nonqui join : 동일한 컬럼이 없이 다른 조건을 사용하여 조인
+    Outer join : 조인 조건에 만족하지 않는 행도 나타냄
+    Self join : 한 테이블 내에서 조인
+ 
+ */
+ 
+ 
+ 
+ 
