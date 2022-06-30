@@ -32,8 +32,12 @@ select tablespace_name, status, contents from dba_tablespaces;
 
 select * from tab;
 
+create user javauser identified by java;
 
 
+grant connect, resource to javauser;
+revoke connect, resource from javauser;
 
+grant create view to SCOTT;
 
 

@@ -1131,6 +1131,422 @@ drop primary key cascade;
  
  */
  
+ -- equi join: 동일한 컬럼을 기준으로 조인
+ -- 두 테이블에서 공통적으로 존재하는 컬럼의 값이 일치되는 행을 연결하여 결과를 생성하는 조인
+ select ename, dname from emp e, dept d where e.deptno=d.deptno;
  
+ 
+ -- nonequi join: 동일한 컬럼이 없이 다른 조건을 사용하여 조인
+ -- 조인할 테이블 사이에 컬럼의 값이 직접적으로 일치하지 않을 시 사용하는 조인
+ select * from salgrade;
+ select * from emp;
+ 
+ select e.ename, e.sal, s.grade from emp e, salgrade s where e.sal between s.losal and s.hisal;
+ select e.ename, e.sal, s.grade from emp e, salgrade s where e.sal >= s.losal and e.sal <= s.hisal;
+ 
+ /*
+  outer join: 조인 조건에 만족하지 않는 행도 나타냄
+              행이 조인 조건에 만족하지 않을 경우 그 행은 결과에 나타나지 않게 됨
+              이때 조인 조건에 만족하지 않는 행들도 나타내기 위해 outer join을 사용함
+ */
+ 
+ select e.ename, d.deptno, d.dname from emp e, dept d where e.deptno=d.deptno order by d.deptno;
+ 
+ /*
+  부서 테이블에는 40번 부서가 존재한다.
+  하지만, 조인결과를 보게되면 10 ~ 30번 부서번호만 출력되고 40번은 출력되지 않는다.
+  이는 사원 테이블의 부서번호에는 40번이 존재하지 않기 때문이다.
+  
+  부서테이블의 40번 부서와 조인할 사원테이블의 부서번호가 없지만, 40번 부서도 출력되도록 하려면 outer join
+  을 사용하면 해결 됨
+  outer join을 사용하려면 기호(+)를 사용하여 조인 조건에서 정보가 부족한 컬럼 명 뒤에 위치하게 하면 됨
+  
+  즉, 사원테이블에 부서번호 40번이 없기 때문에 e.deptno(+)쪽에 + 기호를 덧붙이면 됨
+ */
+ 
+ -- self join: 한 테이블 내에서 조인
+ 
+ /*
+   self join이란 말 그대로 자기 자신과 조인을 맺는 것을 의미함
+   from절 다음에 동일한 테이블명을 2번 기술하고 where절에도 조인 조건을 주어야하는데
+   이때 서로 다른 테이블인 것처럼 인식할 수 있도록 하기 위해서 별칭을 사용한다.
+   emp e, emp p
+ */
+ 
+ select ename, mgr from emp;
+ 
+ -- emp 테이블에 별칭을 사용하여 하나의 테이블을 두개의 테이블인 것처럼 사용하려면 
+ -- work(사원테이블), manager(매니저 테이블)로 별칭을 부여한다.
+ 
+ 
+ select work.ename, manager.ename from emp work, emp manager where work.mgr=manager.empno;
+ 
+ /*
+ 문]
+    사원의 이름과 그의 매니저 이름을 출력하는 쿼리문을 작성하시오.
+    
+    출력 결과: ford의 매니저는 jones이다.
+    
+ */
+ 
+ select work.ename ||'의 매니저는'||   manager.ename ||'이다.' 
+ from emp work, emp manager where work.mgr=manager.empno;
+ 
+ /*
+  서브 쿼리
+  
+   서브 쿼리는 하나의 select 문장의 절 안에 포함 또 하나의 select 문장이다.
+   그렇기에 서브 쿼리를 포함하고 있는 쿼리문을 메인쿼리,
+   포함된 또 하나의 쿼리를 서브 쿼리 라고함
+   서브쿼리의 종류는 단일행 서브쿼리, 다중행 서브쿼리가 있음
+   서브쿼리를 이용해서 테이블 생성도 가능함
+   서브 쿼리문을 이용해서 테이블에 데이터를 추가, 수정, 삭제할 수 있음
+ */
+ 
+ /*
+ ex) 사원이름이 SCOTT인 사원이 어떤 부서 소속인지 소속 부서명을 알아내려면 조인을 사용해서
+     해결 했지만, 조인이 아닌 서브쿼리를 이용해서도 해결이 가능하다.
+ */
+ 
+ -- 먼저 SCOTT의 부서명을 알아서 부서번호를 알아 내야한다.
+ select deptno from emp where ename='SCOTT';
+ select dname from dept where deptno=20;
+ 
+ select dname from dept where deptno=(select deptno from emp where ename='SCOTT');
+ -- 서브쿼리는 비교연산자의 오른쪽에 기술해야하고 반드시 괄호()로 둘러싸야한다.
+ -- 서브쿼리는 메인 쿼리가 실행되기 전에 한번만 실행함
+ 
+ /*
+ 단일행 서브쿼리
+   - 단일행 서브쿼리는 내부 select 문장으로부터 오직 하나의 행만을 반환받으며,
+     단일행 비교연산자(=, >, >=, <, <=, <>)를 사용함
+     
+ 다중행 서브쿼리
+   - 서브쿼리에서 반환되는 결과가 하나 이상의 행일 때 사용하는 서브쿼리이다.
+   
+     다중행 연산자
+     IN           : 메인쿼리의 비교 조건('=' 연산자로 비교할 경우)이 서브쿼리의 결과 중에서 하나라도 일치하면 참
+     ANY, SOME    : 메인쿼리의 비교 조건이 서브쿼리의 검색 결과와 하나 이상이 일치하면 참
+     ALL          : 메인쿼리의 비교 조건이 서브쿼리의 검색 결과와 모든 값이 일치하면 참
+     EXIST        : 메인쿼리의 비교 조건이 서브쿼리의 결과 중에서 만족하는 값이 하나라도 존재하면 참
+ */
+
+-- 단일행 서브쿼리
+-- SMITH와 같은 부서에서 근무하는 사원의 정보를 출력하시오.(서브쿼리로 작성: 단일행)
+SELECT DEPTNO from emp where ename='SMITH';
+select * from emp where deptno=20;
+
+select * from emp where deptno=(select deptno from emp where ename='SMITH');
+
+-- 사원테이블에서 평균 급여보다 더 많은 급여를 받는 사원을 검색하여 출력하시오.
+
+-- 급여의 평균을 구한다.
+select sal from emp;
+select * from emp where sal > (select avg(sal) from emp);
+
+-- IN 연산자
+--   결과가 2개 이상 구해지는 쿼리문을 서브쿼리로 기술할 경우에는 다중행 연산자와 함께 사용해야함
+
+-- 급여를 3000이상 받는 사원이 소속된 부서와 동일한 부서에서 근무하는 사원을 출력하시오.
+
+select distinct(deptno) from emp where sal >= 3000;
+select ename, sal, deptno from emp where deptno in (select Deptno from emp where sal >=3000);
+
+
+/*
+ANY
+  - 메인쿼리의 비교 조건이 서브쿼리의 검색 결과와 하나 이상만 일치하면 참이다.
+    찾아진 값에서 가장 작은 값 즉, 최소값 보다 크면 참이 됨
+    
+    연산자 any는 찾아진 값에 대해서 하나라도 크면 참이 된다.
+*/
+
+-- 부서 번호가 30번인 사원들의 급여 중 가장 작은 값(950) 보다 많은 급여를 받는
+-- 사원을 이름, 급여를 출력하시오.
+
+select sal from emp where deptno=30;
+select ename, sal, deptno from emp where  deptno=30 and sal> any (select sal from emp where deptno=30);
+
+-- ALL: 메인 쿼리의 비교 조건이 서브쿼리의 검색 결과와 모든 값이 일치하면 참
+--  EX) 30번 소속사원들 중에서 급여를 가장 많이 받는 사원보다 더 많은 급여를 받는
+--         사원의 이름, 급여를 출력하시오.
+--   30번 부서 사원 급여들 모두에 대하여 커야함
+
+select ename, sal, deptno from emp where sal> ALL (select sal from emp where deptno=30);
+
+-- 서브퀄를 이용해서 테이블 작성
+create table emp07
+as select * from emp where i=0;
+
+create table emp08
+as select empno, ename from emp where 1=0;
+
+select * from dept02;
+create table dept02
+as select * from dept where 1=0;
+
+-- 서브쿼리를 이용한 데이터 추가
+insert into dept02 select * from dept;
+
+
+-- 서브 쿼리를 이용해서 데이터 수정
+-- 10번 부서의 지역명을 40번 부서의 지역명으로 변경하시오.
+update dept02 set loc = (select loc from dept02 where deptno=40) where deptno=10;
+/*
+   컬럼이 2개 이상인 경우
+    서브쿼리 형식 두 가지
+    1. update 테이블명
+    set 컬럼명=(서브쿼리), 컬럼명2=(서브쿼리) where 조건
+    
+    2. update 테이블명
+    set (컬럼명1, 컬럼명2)=(서브쿼리1, 서브쿼리2) where 조건
+*/
+
+-- ex) 20번 부서의 부서명과 지역명을 30번 부서의 부서명과 지역명으로 변경하시오.
+  update dept02 set dname=(select dname from dept02 where deptno=30), 
+  loc=(select loc from dept02 where deptno=30) where deptno=20;
+  select * from dept02;
+-- 두 번째 방법
+update dept02 set (dname, loc) = (select dname, loc from dept02 where deptno=30)
+where deptno = 20;
+
+rollback;
+
+sElect deptno from dept where dname='SALES';
+delete from emp01 where deptno=(select deptno from dept where dname='SALES');
+rollback;
+
+-- 문] 직급이 'SALESMAN'인 사원이 받는 급여들의 최소 급여보다 많이 받는 사원들의 이름과 급여를 출력하되
+--     부서번호가 20번인 사원을 제외시키고 출력하시오.
+select min(sal) from emp where job='SALESMAN';
+select ename, sal, deptno from emp where deptno != 20 and sal > (select min(sal) from emp where job='SALESMAN');
+
+-- 사용자 생성
+-- CREATE USER 유저명 IDENTIFIED BY 비밀번호
+-- 유저명: JAVAUSER, 비밀번호: JAVA
+
+
+
+---------------------- 뷰 ---------------------
+/*
+   뷰의 개년
+     뷰(view)란 '보다'란 의미를 갖고 있는 점을 감안해 보면 알 수 있듯이 실제 테이블에
+     저장된 데이터를 뷰를 통해서 볼 수 있도록 한다.
+     
+     뷰를 흔히 가상 테이블이라고 부르는데 이는 테이블과 거의 동일하게 사용되기 때문이다.
+     
+     뷰는 물리적인 구조인 테이블과 달리 데이터 저장 공간이 없다.
+     뷰는 단지 쿼리문을 저장하고 있는 객체라고 표현할 수 있다.
+*/
+select * from emp01;
+
+create view view_emp10
+as
+select empno, ename, deptno from emp01 where deptno=10;
+
+
+/*
+뷰의 사용 목적
+   직접적인 테이블 접근을 제한하기 위해 사용한다.
+   복잡한 질의를 쉽게 만들기 위해서 사용한다.
+   
+뷰의 특징
+   뷰는 테이블에 대한 제한을 가지고 테이블의 일정한 부분만 보일 수 있는 가상 테이블이다.
+   뷰는 실제 자료를 갖지는 않지만, 뷰를 통해 테이블을 관리할 수 있다.
+   하나의 테이블에 뷰의 개수는 제한이 없다.
+   
+뷰 생성과 조회
+   뷰를 생성하기 위해서는 테이블 생성과 같이 DDL(create, select)을 사용한다.
+   
+기본 테이블
+   뷰에 의해 제한적으로 접근해서 사용하는 실질적으로 데이터를 저장하고 있는
+   물리적인 테이블을 의미함
+*/
+
+select * from emp01;
+drop table emp01;
+create table emp01
+as select * from emp;
+ 
+ select empno, ename, sal, deptno from emp01 where deptno=10;
+ 
+ select * from view_emp10;
+ 
+ /*
+ 뷰 생성
+  - 뷰는 테이블처럼 하나의 개체로서 테이블 생성할 때와 유사하게 create view 명령으로 생성한다.
+  
+   생성 형식
+   
+   create [or replace] [force] [noforce] view view_name
+   [ (alias, alias, ...) ]
+   as subquery
+   [with check option]
+   [with read only];
+   해당 뷰를 통해서는 select만 가능하며 insert/update/delete를 사용할 수 없다.
+   
+   or replace view
+     - 새로운 뷰를 만들 수 있을 뿐만 아니라 기존에 뷰가 존재하더라도 삭제하지 않고
+       새로운 구조의 뷰로 변경할 수 있다.
+       
+   force
+     - 기존 테이블의 존재 여부에 상관없이 뷰를 생성함
+     
+   with check option
+     - 해당 뷰를 통해서 볼 수 있는 범위 내에서만 update or insert만 가능하다.
+     
+   뷰의 동작 원리
+     - 사용자가 뷰에 대해서 질의를 하면 user_views에서 뷰에 대한 정의를 조회함
+     - 기본 테이블에 대한 접근 권한을 살핌
+     - 뷰에 대한 질의를 기본 테이블에 대한 질의로 변경한다.
+     - 기본 테이블에 대한 질의를 통해 데이터를 검색함
+     - 검색된 결과를 출력
+     
+   뷰의 종류
+     - 기본 테이블의 수에 따라 단순 뷰, 복합 뷰로 나뉨
+     
+     단순 뷰                             복합 뷰
+      - 하나의 테이블로 생성               - 여러개의 테이블로 생성
+      - 그룹함수의 사용이 불가능           - 그룹 함수의 사용이 가능
+      - DISTINCT 사용이 불가능            - DISTINCT 사용이 가능
+      - DML() 사용가능                      - DML 사용이 불가능
+ */
+ 
+ insert into view_emp10 values(8000, 'ANGEL', 10);
+ -- 단순 뷰에서는 DML명령문 처리 결과는 뷰를 정의할 때 사용한 기본 테이블에도 영향을 미친다.
+ select * from view_emp10;
+ 
+ -- 단순 뷰의 컬럼에 별칭 부여
+ -- 사원번호, 사원명, 급여, 부서번호로 구성된 뷰를 작성하되 
+ -- 기본 테이블은 emp01로 하고 컬럼명은 한글로 작성하시오.
+desc view_emp10;
+
+create or replace
+view view_emp10(사원번호, 사원명, 급여, 부서번호)
+as
+select empno, ename, sal, deptno from emp01;
+select * from view_emp10 where deptno=10;
+
+/*
+  오류 이유: 컬럼을 별칭을 사용해서 뷰를 생성하면 view_emp10의 컬럼 이름만 별칭으로
+            데이터 구조에 반영되고, 기본 테이블의 컬럼이름에는 전혀 영향을 미치지 못하기 때문에 오류 발생
+*/
+
+-- 그룹함수를 사용한 단순 뷰
+-- 부서별 급여 총액과 평균을 구하는 작업을 자주 한다면 이를 뷰로 생성해 놓았다가 사용하면 편리하다.
+create or replace view view_sal
+as
+select deptno, sum(sal) as "salsum", round(avg(sal)) as "salavg"
+from emp01
+group by deptno;
+select * from view_sal;
+ 
+ /*
+  뷰에 관련된 데이터 딕셔너리
+    - 데이터 딕셔너리 user_views에 사용자가 생성한 모든 뷰에 대한 정의가 저장되어 있음
+      뷰의 이름을 위한 view_name이란 컬럼과 뷰를 작성할 때 기술한 서브쿼리가 저장되어 있는
+      text 컬럼이 있음
+      
+      검색: select view_name, text from user_views;
+ 
+ 
+뷰 삭제
+  - 뷰는 실제가 없는 가상 테이블이기 때문에 뷰를 삭제한다는 것은 
+    user_views 데이터 딕셔너리에 저장되어 있는 뷰의 정의를 삭제하는 것임
+ */
+select view_name, text from user_views;
+drop view view_sal;
+
+create or replace
+view view_emp10(사원번호, 사원명, 급여, 부서번호)
+as
+select empno, ename, sal, deptno from emp01;
+
+
+create or replace
+view view_emp10
+as
+select empno, ename, sal, comm, deptno from emp01 where deptno=10;
+
+select * from emp01;
+
+select * from view_emp10;
+
+-- 기본 테이블 없이 뷰를 생성하기 위한 force 옵션
+-- 기본 테이블이 존재하지 않더라도 뷰를 생성함
+create force view view_notable
+as
+select empno, ename, deptno from emp09
+where deptno=10;
+
+drop view view_notable;
+select * from view_notable;
+select * from emp02;
+
+/*
+with check option
+   - 뷰를 생성시 조건으로 지정한 컬럼 값을 변경하지 못하도록 하는 것을 의미함
+*/
+
+create or replace
+view view_chk20
+as
+select empno, ename, sal, comm, deptno from emp01
+where deptno=20 with check option;
+
+select * from view_chk20;
+-- 급여가 5000 이상인 사원을 10번 부서로 이동하는 쿼리문을 작성
+update view_chk20 set deptno=10 where sal >= 5000;
+-- 이유: 부서번호에 옵션을 지정 하였으므로 이 뷰를 통해서는 부서번호를 변경할 수 없다.
+
+/*
+  with read only: 뷰를 통해서는 기본 테이블의 어떤 컬럼에 대해서도 내용을 변경할 수 없다.
+  
+  with check option과 with read only의 차이점
+  
+  with  check option은 조건에 사용한 컬럼의 값을 수정하지 못하게 하는 것이고,
+  with read only는 기본 테이블의 모두를 수정하지 못하게 하는 것을 의미함
+*/
+
+create or replace view view_read30
+as
+select empno, ename, sal, comm, deptno
+from emp01
+where deptno=30 with read only;
+
+select * from view_read30;
+update view_read30 set comm=1000;
+
+/*
+ 뷰 활용하기
+ 
+  사원중에서 입사일이 빠른 사람 5명(TOP-5)만을 얻는 질의문을 작성
+  ROWNUM 컬럼을 이용
+   - ROWNUM 컬럼은 오라클에서 내부적으로 부여되는데 insert문에 의해 입력한
+   순서에 따라 1씩 증가되면서 값이 지정됨
+*/
+
+create or replace view view_hire
+as
+select empno, ename, hiredate from emp01
+order by hiredate;
+select rownum, empno, ename, hiredate from view_hire;
+
+
+
+create table department (
+deptno number(3) not null,
+dname varchar2(30) not null,
+college number(3) not null,
+loc varchar2(15) not null,
+constraint department_pk primary key(deptno)
+);
+commit;
+select * from department;
+
+
+
+
+
  
  
