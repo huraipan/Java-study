@@ -1544,7 +1544,22 @@ constraint department_pk primary key(deptno)
 commit;
 select * from department;
 
+create table professor (
+profno number(5) not null,
+name varchar2(10) not null,
+ename varchar2(20) not null,
+position varchar2(20) not null,
+sal number(4) not null,
+hiredate date not null,
+age number(3) not null,
+deptno number(3) not null,
+constraint professor_pk primary key(profno)
+);
 
+alter table professor add constraint professor_fk foreign key(deptno)
+references department(deptno);
+commit;
+select * from department;
 
 
 
