@@ -4,21 +4,18 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.JList;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.SwingConstants;
-import javax.swing.JMenuBar;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 public class App {
 	private final String ID = "Jin";
@@ -103,7 +100,7 @@ public class App {
 		textField_3.setBounds(58, 318, 246, 20);
 		sumPanel.add(textField_3);
 		textField_3.setColumns(10);
-		frame.getContentPane().add(loginPanel);
+		frame.getContentPane().add(loginPanel);	
 		frame.getContentPane().add(sumPanel);
 		frame.getContentPane().add(tranPanel);
 		
