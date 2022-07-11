@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="com.inner.MemberInner.Inner"/>
     <fullyQualifiedTypeName name="com.inner.StaticInner.Inner"/>
     <fullyQualifiedTypeName name="com.inner.OuterEx01.InnerEx01"/>
     <fullyQualifiedTypeName name="staticex.Student1"/>
@@ -59,5 +58,6 @@
     <fullyQualifiedTypeName name="java.lang.Exception"/>
     <fullyQualifiedTypeName name="java.io.BufferedReader"/>
     <fullyQualifiedTypeName name="java.io.PrintWriter"/>
+    <fullyQualifiedTypeName name="gamelevel.Player"/>
     <fullyQualifiedTypeName name="java.io.IOException"/>
 </qualifiedTypeNameHistroy>
