@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="com.inner.StaticInner.Inner"/>
-    <fullyQualifiedTypeName name="com.inner.OuterEx01.InnerEx01"/>
-    <fullyQualifiedTypeName name="staticex.Student1"/>
     <fullyQualifiedTypeName name="array.Student"/>
     <fullyQualifiedTypeName name="array.BookArrary2"/>
     <fullyQualifiedTypeName name="javax.security.auth.Subject"/>
@@ -34,7 +31,6 @@
     <fullyQualifiedTypeName name="com.threadEx.MyThread"/>
     <fullyQualifiedTypeName name="java.lang.InterruptedException"/>
     <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
-    <fullyQualifiedTypeName name="java.lang.ClassNotFoundException"/>
     <fullyQualifiedTypeName name="java.sql.SQLException"/>
     <fullyQualifiedTypeName name="java.sql.DriverManager"/>
     <fullyQualifiedTypeName name="java.sql.SQLClientInfoException"/>
@@ -60,4 +56,8 @@
     <fullyQualifiedTypeName name="gamelevel.Player"/>
     <fullyQualifiedTypeName name="java.io.IOException"/>
     <fullyQualifiedTypeName name="java.lang.System"/>
+    <fullyQualifiedTypeName name="java.lang.reflect.Field"/>
+    <fullyQualifiedTypeName name="java.lang.ClassNotFoundException"/>
+    <fullyQualifiedTypeName name="java.lang.InstantiationException"/>
+    <fullyQualifiedTypeName name="java.lang.IllegalAccessException"/>
 </qualifiedTypeNameHistroy>
