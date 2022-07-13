@@ -1,0 +1,73 @@
+<!DOCTYPE html> <!-- HTML5 문서임을 알리는 지시어-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웹 페이지의 구성요소</title>
+    <!-- 이건 CSS -->
+    <style>
+
+     body {
+        background-color: linen;
+        color: purple;
+        margin-left: 40px;
+        margin-right: 40pxl;
+     } 
+
+     h3 {
+        text-align: center; color: darkred;
+     }
+        
+     hr {
+        height: 5px;
+        border : solid grey;
+        background-color: grey;
+     }
+
+     span {
+        color: blue;
+        font-size: 20px;
+     }
+
+    </style>
+    
+
+
+    <!-- Java Script  -->
+    <script>
+    function show() {
+    //img 태그에 이미지를 보여주기
+        document.getElementById("Elvis").src = "./img/elvis.jpg";    
+    }
+
+    function hide() {
+    //img 태그에 이미지를 숨기
+    document.getElementById("Elvis").src=""
+    }
+
+
+
+
+    </script>
+
+
+</head>
+<body>
+    <!-- HTML의 문서의 구조를 만듬 -->
+    <h3 onmouseover="show()" onmouseout="hide()"> Elvis Presley </h3>
+    <hr color="red">
+    <div><img src="" id = "Elvis" alt="Elvis"></div>
+    <p> 
+    He was an American singer and actor In November 1956 
+    he made his film debut in <span>Love me Tender</span>
+    He is often referred to as <span>"the King of Rock and Roll".</span>
+    
+    
+    
+    
+    </p>
+
+
+</body>
+</html>
